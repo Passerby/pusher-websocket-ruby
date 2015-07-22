@@ -70,6 +70,7 @@ module PusherClient
             connect_internal
           rescue => ex
             send_local_event "pusher:error", ex
+            disconnect
           end
         end
       else
