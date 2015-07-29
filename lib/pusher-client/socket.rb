@@ -80,15 +80,20 @@ module PusherClient
     end
 
     def disconnect
-      return unless @connection
       logger.debug("Pusher : disconnecting")
-      @connected = false
-      @connection.close
-      @connection = nil
+
+      if @connection
+        @connected = false
+        @connection.close
+        @connection = nil
+      end
+
       if @connection_thread
         @connection_thread.kill
         @connection_thread = nil
       end
+
+      send_local_event "pusher:disconnected", nil
     end
 
     def subscribe(channel_name, user_data = nil)
