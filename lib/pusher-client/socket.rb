@@ -51,6 +51,7 @@ module PusherClient
 
       bind('pusher:error') do |data|
         logger.fatal("Pusher : error : #{data.inspect}")
+        disconnect
       end
 
       # Keep this in case we're using a websocket protocol that doesn't
