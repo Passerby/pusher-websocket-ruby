@@ -50,7 +50,11 @@ module PusherClient
       end
 
       bind('pusher:error') do |data|
-        logger.fatal("Pusher : error : #{data.inspect}")
+        logger.error("Pusher : error : #{data.inspect}")
+      end
+
+      bind('pusher:fatal') do |data|
+        logger.fatal("Pusher : fatal : #{data.inspect}")
         disconnect
         raise data
       end
@@ -70,6 +74,8 @@ module PusherClient
         @connection_thread = Thread.new do
           begin
             connect_internal
+          rescue SocketError, EOFError, Errno::ETIMEDOUT => ex
+            send_local_event "pusher:fatal"
           rescue => ex
             send_local_event "pusher:error", ex
           end
