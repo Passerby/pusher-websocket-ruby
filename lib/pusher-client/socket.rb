@@ -75,7 +75,7 @@ module PusherClient
           begin
             connect_internal
           rescue SocketError, EOFError, Errno::ETIMEDOUT => ex
-            send_local_event "pusher:fatal"
+            send_local_event "pusher:fatal", ex
           rescue => ex
             send_local_event "pusher:error", ex
           end
